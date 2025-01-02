@@ -1,20 +1,46 @@
 
 <?php
 
+$success = 0;
+$user= 0;
+
+
 if($_SERVER['REQUEST_METHOD']== 'POST'){
   include 'connect.php';
   $username = $_POST['username'];
   $password = $_POST['password'];
 
-  $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
-  $result = mysqli_query($con, $sql);
+  // $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
+  // $result = mysqli_query($con, $sql);
 
-  if($result){
-    echo "Registration Successful";
-  }else{
-    echo "Error: ". mysqli_error($con);
+  // if($result){
+  //   echo "Registration Successful";
+  // }else{
+  //   die (mysqli_error($con));
+  // }
+
+$sql = "SELECT * FROM `registration` where username='$username' ";
+$result = mysqli_query($con, $sql);
+if($result){
+  $num = mysqli_num_rows($result);
+  if($num >0){
+    // echo "User already exists";
+    $user = 1;
   }
 }
+else{
+  $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
+  $result = mysqli_query($con, $sql);;
+  if($result){
+    // echo "Sign up Successful";
+    $success = 1;
+  }else{
+    die (mysqli_error($con));
+  }
+
+
+
+}}
 
 ?>
 
@@ -30,6 +56,15 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
   <body>
     <div class="container-md d-flex flex-column align-items-center mt-5">
       <h1 class="text-primary">Sign Up Page</h1>
+    <?php
+    if($user){
+      echo'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Sorry!!</strong> User already exists.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+    } 
+    ?>
+
       <form class="w-50" action="sign.php" method="post" >
         <div class="mb-3 mt-3">
           <label for="exampleInputEmail1" class="form-label">Name</label>
