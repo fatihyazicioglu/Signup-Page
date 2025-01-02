@@ -59,9 +59,18 @@ else{
     <?php
     if($user){
       echo'<div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Sorry!!</strong> User already exists.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>';
+            <strong>Sorry!!</strong> User already exists.
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+    } 
+    ?>
+
+<?php
+    if($success){
+      echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Super!!</strong> You are succesfully signed up.
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
     } 
     ?>
 
