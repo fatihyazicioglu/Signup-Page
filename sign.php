@@ -3,43 +3,45 @@
 $success = 0;
 $user= 0;
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include 'connect.php'; // Include your database connection file
+
+// Check if the table exists
+$table_check_query = "SHOW TABLES LIKE 'registration'";
+$table_check_result = mysqli_query($con, $table_check_query);
+
+if (mysqli_num_rows($table_check_result) == 0) {
+    // Create the table if it does not exist
+    $sql = "CREATE TABLE registration (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL
+    )";
+    $result = mysqli_query($con, $sql);
+    if (!$result) {
+        die("Error creating table: " . mysqli_error($con));
+    }
+}
 
 if($_SERVER['REQUEST_METHOD']== 'POST'){
-  include 'connect.php';
   $username = $_POST['username'];
   $password = $_POST['password'];
 
-  // $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
-  // $result = mysqli_query($con, $sql);
+  // Insert data into the database
+  $sql = "INSERT INTO registration (username, password) VALUES ('$username', '$password')";
+  $result = mysqli_query($con, $sql);
 
-  // if($result){
-  //   echo "Registration Successful";
-  // }else{
-  //   die (mysqli_error($con));
-  // }
-
-$sql = "SELECT * FROM `registration` where username='$username' ";
-$result = mysqli_query($con, $sql);
-if($result){
-  $num = mysqli_num_rows($result);
-  if($num >0){
-    // echo "User already exists";
-    $user = 1;
+  if (!$result) {
+      die("Error: " . mysqli_error($con));
+  } else {
+      echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Super!!</strong> You are successfully signed up.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
   }
 }
-else{
-  $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
-  $result = mysqli_query($con, $sql);;
-  if($result){
-    // echo "Sign up Successful";
-    $success = 1;
-  }else{
-    die (mysqli_error($con));
-  }
-
-
-
-}}
 
 ?>
 
@@ -73,10 +75,10 @@ else{
     } 
     ?>
 
-      <form class="w-50" action="sign.php" method="post" >
+      <form class="w-50" action="sign.php" method="post">
         <div class="mb-3 mt-3">
           <label for="exampleInputEmail1" class="form-label">Name</label>
-          <input type="text" placeholder="Enter your email" class="form-control" aria-describedby="emailHelp" name="username">
+          <input type="text" placeholder="Enter your name" class="form-control" aria-describedby="emailHelp" name="username">
         </div>
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label">Password</label>

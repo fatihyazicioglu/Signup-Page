@@ -2,7 +2,7 @@
 <?php
 
 $success = 0;
-$user= 0;
+$invalid= 0;
 
 
 if($_SERVER['REQUEST_METHOD']== 'POST'){
@@ -12,25 +12,21 @@ if($_SERVER['REQUEST_METHOD']== 'POST'){
 
  
 
-$sql = "SELECT * FROM `registration` where username='$username' ";
+$sql = "SELECT * FROM `registration` where username='$username' and password='$password'";
 $result = mysqli_query($con, $sql);
 if($result){
   $num = mysqli_num_rows($result);
   if($num >0){
-    // echo "User already exists";
-    $user = 1;
-  }
+  $success = 1;
+  session_start();
+  $_SESSION['username'] = $user;
+  header("location: home.php");
+}
 }
 else{
-  $sql = "INSERT INTO `registration` (username,password) VALUES ('$username', '$password')";
-  $result = mysqli_query($con, $sql);;
-  if($result){
-    // echo "Sign up Successful";
-    $success = 1;
-  }else{
-    die (mysqli_error($con));
-  }
-}}
+$invalid = 1;
+}  
+}
 ?>
 
 
@@ -46,6 +42,23 @@ else{
     <div class="container-md d-flex flex-column align-items-center mt-5">
       <h1 class="text-primary">Login to our website</h1>
   
+      <?php
+    if($success){
+      echo'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Super!!</strong> You are succesfully logged.
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+    } 
+    ?>
+
+<?php
+    if($invalid){
+      echo'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!!</strong> Invalid Credentials.
+           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+    } 
+    ?>
 
       <form class="w-50" action="login.php" method="post" >
         <div class="mb-3 mt-3">
